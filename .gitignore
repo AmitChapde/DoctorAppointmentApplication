@@ -1,0 +1,42 @@
+# ---------------------------
+# Root Git Ignore
+# ---------------------------
+
+# Environment files
+.env
+*.env
+*.env.local
+
+# Node modules (backend + frontend)
+backend/node_modules/
+doctor-booking-frontend/node_modules/
+
+# Build outputs
+backend/dist/
+backend/build/
+doctor-booking-frontend/dist/
+doctor-booking-frontend/build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor folders
+.vscode/
+.idea/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+
+# Package-lock or pnpm-lock (optional)
+# Uncomment if you want to ignore lock files
+# package-lock.json
+# pnpm-lock.yaml
+# yarn.lock

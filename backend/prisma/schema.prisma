@@ -1,0 +1,59 @@
+// Prisma + PostgreSQL schema for Doctor Appointment Booking
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+}
+
+model Doctor {
+  id        Int      @id @default(autoincrement())
+  name      String
+  specialty String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  slots Slot[]
+
+  @@index([name])
+}
+
+model Slot {
+  id         Int       @id @default(autoincrement())
+  doctorId   Int
+  startTime  DateTime
+  endTime    DateTime
+  totalSeats Int       // capacity per slot (e.g., 1 per 15-min slot)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  doctor      Doctor     @relation(fields: [doctorId], references: [id])
+  appointments Appointment[]
+
+  @@index([doctorId, startTime])
+  @@index([startTime])
+}
+
+model Appointment {
+  id        String        @id @default(cuid())
+  slotId    Int
+  userId    String        // keep simple, treat as external user identifier (email/uuid)
+  seats     Int           // allow >1 seats if clinic wants group bookings
+  status    BookingStatus @default(PENDING)
+  expiresAt DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  slot Slot @relation(fields: [slotId], references: [id])
+
+  @@index([slotId, status])
+  @@index([expiresAt])
+}
